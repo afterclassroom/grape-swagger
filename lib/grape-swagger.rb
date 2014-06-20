@@ -147,6 +147,14 @@ module Grape
                   operation = {
                     :produces   => content_types_for(target_class),
                     :notes      => notes.to_s,
+                    :authorizations => {
+                      oauth2: [
+                        {
+                          scope: "test:anything",
+                          description: "anything"
+                        }
+                      ]
+                    },
                     :summary    => route.route_description || '',
                     :nickname   => route.route_nickname || (route.route_method + route.route_path.gsub(/[\/:\(\)\.]/,'-')),
                     :httpMethod => route.route_method,
