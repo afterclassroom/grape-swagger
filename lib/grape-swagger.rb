@@ -226,6 +226,8 @@ module Grape
                 items = {}
 
                 raw_data_type = value.is_a?(Hash) ? (value[:type] || 'string').to_s : 'string'
+                allowMultiple    = value.is_a?(Hash) && !value[:values].nil?
+                enum          = value.is_a?(Hash) && !value[:values].nil? ? (value[:values] || []) : []
                 dataType      = case raw_data_type
                                 when "Boolean", "Date", "Integer", "String"
                                   raw_data_type.downcase
@@ -270,14 +272,15 @@ module Grape
                   description:   as_markdown(description),
                   type:          dataType,
                   dataType:      dataType,
-                  required:      required,
-                  allowMultiple: is_array
+                  required:      required
                 }
                 parsed_params.merge!({format: "int32"}) if dataType == "integer"
                 parsed_params.merge!({format: "int64"}) if dataType == "long"
                 parsed_params.merge!({items: items}) if items.present?
                 parsed_params.merge!({defaultValue: defaultValue}) if defaultValue
-
+                parsed_params.merge!({enum: enum}) if allowMultiple
+                parsed_params.merge!({allowMultiple: true}) if allowMultiple
+                
                 parsed_params
               end
             end
