@@ -222,6 +222,7 @@ module Grape
               params ||= []
               params.map do |param, value|
                 value[:type] = 'File' if value.is_a?(Hash) && value[:type] == 'Rack::Multipart::UploadedFile'
+                value[:type] = 'Boolean' if value.is_a?(Hash) && value[:type] == 'Virtus::Attribute::Boolean'
                 items = {}
 
                 raw_data_type = value.is_a?(Hash) ? (value[:type] || 'string').to_s : 'string'
